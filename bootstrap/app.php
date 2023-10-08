@@ -60,6 +60,7 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('session');
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,43 @@ $app->configure('app');
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
 // ]);
+
+/*
+|--------------------------------------------------------------------------
+| Session, Cookies, CSRF and Strings Normalization
+|--------------------------------------------------------------------------
+|
+| Session Encryption is enabled in config/session.php by default.
+| CSRF usage in forms: <input type="hidden" name="_token" value="{{ Session::token() }}" />
+|
+*/
+
+$app->middleware([
+    App\Http\Middleware\ConvertEmptyStringsToNull::class,
+    App\Http\Middleware\TrimStrings::class,
+    Illuminate\Session\Middleware\StartSession::class,
+    Illuminate\Cookie\Middleware\EncryptCookies::class,
+    Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+    App\Http\Middleware\VerifyCsrfToken::class
+]);
+
+$app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {
+    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session');
+});
+
+$app->singleton('session.store', function () use ($app) {
+    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session.store');
+});
+
+$app->singleton('cookie', function () use ($app) {
+    return $app->loadComponent('session', 'Illuminate\Cookie\CookieServiceProvider', 'cookie');
+});
+
+$app->bind('Illuminate\Contracts\Cookie\QueueingFactory', 'cookie');
+
+class_alias(Illuminate\Support\Facades\Session::class, 'Session');
+class_alias(Illuminate\Support\Facades\Cookie::class, 'Cookie');
+class_alias(Illuminate\Support\Facades\Request::class, 'Request');
 
 /*
 |--------------------------------------------------------------------------
