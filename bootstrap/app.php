@@ -23,7 +23,7 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->withFacades();
 
 // $app->withEloquent();
 
@@ -90,16 +90,35 @@ $app->configure('session');
 | CSRF usage in forms: <input type="hidden" name="_token" value="{{ Session::token() }}" />
 |
 */
-
+// Set middleware.
 $app->middleware([
-    App\Http\Middleware\ConvertEmptyStringsToNull::class,
-    App\Http\Middleware\TrimStrings::class,
     Illuminate\Session\Middleware\StartSession::class,
     Illuminate\Cookie\Middleware\EncryptCookies::class,
     Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-    App\Http\Middleware\VerifyCsrfToken::class
+    Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    App\Http\Middleware\ConvertEmptyStringsToNull::class,
+    App\Http\Middleware\TrimStrings::class,
+    App\Http\Middleware\VerifyCsrfToken::class,
 ]);
 
+// Set cookie, Session service provider.
+$app->register(\Illuminate\Cookie\CookieServiceProvider::class);
+$app->register(\Illuminate\Session\SessionServiceProvider::class);
+
+$app->bind('Illuminate\Contracts\Cookie\QueueingFactory', 'cookie');
+
+class_alias(Illuminate\Support\Facades\Session::class, 'Session');
+class_alias(Illuminate\Support\Facades\Cookie::class, 'Cookie');
+class_alias(Illuminate\Support\Facades\Request::class, 'Request');
+
+$app->alias('cookie', \Illuminate\Cookie\CookieJar::class);
+$app->alias('cookie', \Illuminate\Contracts\Cookie\Factory::class);
+$app->alias('cookie', \Illuminate\Contracts\Cookie\QueueingFactory::class);
+$app->alias('session', \Illuminate\Session\SessionManager::class);
+$app->alias('session.store', \Illuminate\Session\Store::class);
+$app->alias('session.store', \Illuminate\Contracts\Session\Session::class);
+
+/*
 $app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {
     return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session');
 });
@@ -111,12 +130,7 @@ $app->singleton('session.store', function () use ($app) {
 $app->singleton('cookie', function () use ($app) {
     return $app->loadComponent('session', 'Illuminate\Cookie\CookieServiceProvider', 'cookie');
 });
-
-$app->bind('Illuminate\Contracts\Cookie\QueueingFactory', 'cookie');
-
-class_alias(Illuminate\Support\Facades\Session::class, 'Session');
-class_alias(Illuminate\Support\Facades\Cookie::class, 'Cookie');
-class_alias(Illuminate\Support\Facades\Request::class, 'Request');
+*/
 
 /*
 |--------------------------------------------------------------------------
