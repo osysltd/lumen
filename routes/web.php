@@ -81,7 +81,7 @@ $router->post('/test/csrf-post', function (\Illuminate\Http\Request $request) {
         } catch (\Illuminate\Validation\ValidationException $th) {
             Session::flash('message', json_encode($th->errors()));
         } finally {
-            return redirect()->to('/test/csrf-get');
+            return redirect()->to('/test/csrf');
         }
     }
 });
