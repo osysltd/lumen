@@ -61,3 +61,27 @@ $router->get('/test/cookie-get', function (\Illuminate\Http\Request $request) {
         dd($request->cookie('name-of-cookie'));
     }
 });
+
+$router->get('/test/csrf', function (\Illuminate\Http\Request $request) {
+    if (env('APP_DEBUG')) {
+        return view("test", []);
+    }
+});
+
+$router->post('/test/csrf-post', function (\Illuminate\Http\Request $request) {
+    if (env('APP_DEBUG')) {
+        try {
+            $this->validate(
+                $request,
+                ['token' => 'required|string|max:40'],
+                ['number' => 'nullable|numeric|digits:1']
+            );
+            Session::flash('message', implode(' ', [$request->token, $request->number, Session::token()]));
+
+        } catch (\Illuminate\Validation\ValidationException $th) {
+            Session::flash('message', json_encode($th->errors()));
+        } finally {
+            return redirect()->to('/test/csrf-get');
+        }
+    }
+});

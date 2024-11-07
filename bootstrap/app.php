@@ -1,10 +1,12 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
-    dirname(__DIR__)
-))->bootstrap();
+(
+    new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
+        dirname(__DIR__)
+    )
+)->bootstrap();
 
 date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 
@@ -23,9 +25,11 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-$app->withFacades();
+$app->withFacades(true, [
+    \Illuminate\Support\Facades\Config::class => 'Config'
+]);
 
-// $app->withEloquent();
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -102,35 +106,18 @@ $app->middleware([
 ]);
 
 // Set cookie, Session service provider.
-$app->register(\Illuminate\Cookie\CookieServiceProvider::class);
-$app->register(\Illuminate\Session\SessionServiceProvider::class);
-
-$app->bind('Illuminate\Contracts\Cookie\QueueingFactory', 'cookie');
-
-class_alias(Illuminate\Support\Facades\Session::class, 'Session');
-class_alias(Illuminate\Support\Facades\Cookie::class, 'Cookie');
-class_alias(Illuminate\Support\Facades\Request::class, 'Request');
-
-$app->alias('cookie', \Illuminate\Cookie\CookieJar::class);
-$app->alias('cookie', \Illuminate\Contracts\Cookie\Factory::class);
-$app->alias('cookie', \Illuminate\Contracts\Cookie\QueueingFactory::class);
 $app->alias('session', \Illuminate\Session\SessionManager::class);
 $app->alias('session.store', \Illuminate\Session\Store::class);
 $app->alias('session.store', \Illuminate\Contracts\Session\Session::class);
-
-/*
-$app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {
-    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session');
-});
-
-$app->singleton('session.store', function () use ($app) {
-    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session.store');
-});
-
-$app->singleton('cookie', function () use ($app) {
-    return $app->loadComponent('session', 'Illuminate\Cookie\CookieServiceProvider', 'cookie');
-});
-*/
+$app->alias('cookie', \Illuminate\Cookie\CookieJar::class);
+$app->alias('cookie', \Illuminate\Contracts\Cookie\Factory::class);
+$app->alias('cookie', \Illuminate\Contracts\Cookie\QueueingFactory::class);
+$app->bind('Illuminate\Contracts\Cookie\QueueingFactory', 'cookie');
+$app->register(\Illuminate\Cookie\CookieServiceProvider::class);
+$app->register(\Illuminate\Session\SessionServiceProvider::class);
+class_alias(Illuminate\Support\Facades\Session::class, 'Session');
+class_alias(Illuminate\Support\Facades\Cookie::class, 'Cookie');
+class_alias(Illuminate\Support\Facades\Request::class, 'Request');
 
 /*
 |--------------------------------------------------------------------------
@@ -161,7 +148,7 @@ $app->singleton('cookie', function () use ($app) {
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;
