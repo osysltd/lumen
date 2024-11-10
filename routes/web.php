@@ -64,7 +64,7 @@ $router->get('/test/cookie-get', function (\Illuminate\Http\Request $request) {
 
 $router->get('/test/csrf', function (\Illuminate\Http\Request $request) {
     if (env('APP_DEBUG')) {
-        return view("test", []);
+        return view("csrf", []);
     }
 });
 

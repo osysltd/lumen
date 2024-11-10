@@ -21,6 +21,39 @@ Thank you for considering contributing to Lumen! The contribution guide can be f
 
 If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
 
+## Software development under Windows
+* [PHP](https://windows.php.net/download/) 7.4 VC15 x64 Non Thread Safe. Extract zip and add your PHP runtime directory to your Windows PATH environment variable by using  `sysdm.cpl` or `setx /M path "%path%;C:\php\"`
+* [GIT SCM](https://git-scm.com/download/win)
+* [TortoiseGit](https://tortoisegit.org/download/) Installer for Windows PC 
+* [Composer](https://getcomposer.org/download/) Latest Windows Installer
+* [Visual Studio Code](https://code.visualstudio.com/download) for Windows System Installer 
+* [VSCode PHP Tools](https://marketplace.visualstudio.com/items?itemName=DEVSENSE.phptools-vscode) for VS Code extension
+* [VSCode Blade Formatter](https://marketplace.visualstudio.com/items?itemName=amirmarmul.laravel-blade-vscode)
+* [VSCode Bootstrap 5 Snippets](https://marketplace.visualstudio.com/items?itemName=anbuselvanrocky.bootstrap5-vscode)
+* [VSCode PHP Server](https://marketplace.visualstudio.com/items?itemName=brapifra.phpserver)
+* [HeidiSQL](https://www.heidisql.com/download.php)
+
+## Deployment
+
+```sh
+git config credential.helper store
+cp .env.example .env
+composer install
+composer dump-autoload --optimize
+php artisan key:generate
+php artisan cache:clear
+```
+
+In case of `PHP Fatal error:  Allowed memory size of bytes exhausted (tried to allocate bytes)`
+```sh
+php -d memory_limit=-1 /usr/local/bin/composer install
+```
+
+## Snippets
+```sh
+php82-cli artisan cache:clear
+```
+
 ## License
 
 The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
