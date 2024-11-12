@@ -22,6 +22,7 @@
         <div class="container">
             <header>
                 <h2>{{ config('app.name') }}</h2>
+                <p>{{ config('app.url') }}</p>
                 <p>{{ Session::get('message') }}</p>
             </header>
             <form method="post" action="/test/csrf-post">

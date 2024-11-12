@@ -25,12 +25,21 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-//$app->withFacades();
 $app->withFacades(true, [
-    \Illuminate\Support\Facades\Config::class => 'Config'
+    \Illuminate\Support\Facades\Config::class => 'Config',
+    \Illuminate\Support\Facades\Request::class => 'Request',
+    \Illuminate\Support\Facades\Session::class => 'Session',
+    \Illuminate\Support\Facades\Cookie::class => 'Cookie'
 ]);
 
 $app->withEloquent();
+
+$app->alias('session', \Illuminate\Session\SessionManager::class);
+$app->alias('session.store', \Illuminate\Session\Store::class);
+$app->alias('session.store', \Illuminate\Contracts\Session\Session::class);
+$app->alias('cookie', \Illuminate\Cookie\CookieJar::class);
+$app->alias('cookie', \Illuminate\Contracts\Cookie\Factory::class);
+$app->alias('cookie', \Illuminate\Contracts\Cookie\QueueingFactory::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -76,66 +85,19 @@ $app->configure('session');
 | be global middleware that run before and after each request into a
 | route or middleware that'll be assigned to some specific routes.
 |
-*/
-
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
-
-/*
-|--------------------------------------------------------------------------
-| Session, Cookies, CSRF and Strings Normalization
-|--------------------------------------------------------------------------
-|
-| Session Encryption is enabled in config/session.php by default.
 | CSRF usage in forms: <input type="hidden" name="_token" value="{{ Session::token() }}" />
 |
 */
-// Set middleware.
+
 $app->middleware([
-    Illuminate\Session\Middleware\StartSession::class,
-    Illuminate\Cookie\Middleware\EncryptCookies::class,
-    Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-    Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    \Illuminate\Session\Middleware\StartSession::class,
+    \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+    \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+    \Illuminate\Cookie\Middleware\EncryptCookies::class,
     App\Http\Middleware\ConvertEmptyStringsToNull::class,
     App\Http\Middleware\TrimStrings::class,
     App\Http\Middleware\VerifyCsrfToken::class,
 ]);
-
-// Set cookie, Session service provider.
-$app->register(\Illuminate\Cookie\CookieServiceProvider::class);
-$app->register(\Illuminate\Session\SessionServiceProvider::class);
-
-$app->bind('Illuminate\Contracts\Cookie\QueueingFactory', 'cookie');
-
-class_alias(Illuminate\Support\Facades\Session::class, 'Session');
-class_alias(Illuminate\Support\Facades\Cookie::class, 'Cookie');
-class_alias(Illuminate\Support\Facades\Request::class, 'Request');
-
-$app->alias('cookie', \Illuminate\Cookie\CookieJar::class);
-$app->alias('cookie', \Illuminate\Contracts\Cookie\Factory::class);
-$app->alias('cookie', \Illuminate\Contracts\Cookie\QueueingFactory::class);
-$app->alias('session', \Illuminate\Session\SessionManager::class);
-$app->alias('session.store', \Illuminate\Session\Store::class);
-$app->alias('session.store', \Illuminate\Contracts\Session\Session::class);
-
-/*
-$app->singleton(Illuminate\Session\SessionManager::class, function () use ($app) {
-    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session');
-});
-
-$app->singleton('session.store', function () use ($app) {
-    return $app->loadComponent('session', Illuminate\Session\SessionServiceProvider::class, 'session.store');
-});
-
-$app->singleton('cookie', function () use ($app) {
-    return $app->loadComponent('session', 'Illuminate\Cookie\CookieServiceProvider', 'cookie');
-});
-*/
 
 /*
 |--------------------------------------------------------------------------
@@ -148,9 +110,8 @@ $app->singleton('cookie', function () use ($app) {
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(\Illuminate\Session\SessionServiceProvider::class);
+$app->register(\Illuminate\Cookie\CookieServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
