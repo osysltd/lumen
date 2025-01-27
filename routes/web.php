@@ -55,10 +55,30 @@ $router->get('/', function () use ($router) {
 //     $router->get('/metadata', 'HXLMetadataController@index');
 //     $router->get('/organisations', 'HXLOrganisationsController@index');
 // });
+// $router->group(['middleware' => 'auth'], function () use ($router) {
+//     $router->get('admin/index', [
+//         'as' => 'admin.index', 'uses' => 'AdminController@index'
+//     ]);
+//     $router->post('admin/{id}/update', 'ArtworksController@update');
+//     $router->post('admin/store', ['as' => 'createArtwork', 'uses' => 'ArtworksController@store']);
+//     $router->get('admin', 'AdminController@index');
+//     $router->get('admin/new', 'AdminController@new');
+//     $router->get('admin/{id}/edit', 'AdminController@edit');
+//     $router->get('admin/{id}/destroy', 'AdminController@destroy');
+// });
 
 
-$router->get('/test/auth', [
-    'middleware' => ['auth'],
+$router->get('/test/auth-session', [
+    'middleware' => ['auth:web'],
+    function (\Laravel\Lumen\Routing\Router $router) {
+        if (env('APP_DEBUG')) {
+            return $router->app->version();
+        }
+    }
+]);
+
+$router->get('/test/auth-basic', [
+    'middleware' => ['auth:api'],
     function (\Laravel\Lumen\Routing\Router $router) {
         if (env('APP_DEBUG')) {
             return $router->app->version();
