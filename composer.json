@@ -6,6 +6,8 @@
     "type": "project",
     "require": {
         "php": "^8.2",
+        "illuminate/mail": "^11.40",
+        "illuminate/notifications": "^11.40",
         "illuminate/cookie": "^11.40",
         "illuminate/session": "^11.40",
         "laravel/lumen-framework": "^11.2",

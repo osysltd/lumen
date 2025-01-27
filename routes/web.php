@@ -43,7 +43,6 @@ $router->get('/', function () use ($router) {
 //    return view('dashboard');
 //})->name('dashboard');
 
-// HXL
 // $router->group([
 //     'prefix' => 'hxl',
 //     'middleware' => ['auth:api', 'feature:hxl'],
@@ -58,7 +57,7 @@ $router->get('/', function () use ($router) {
 // });
 
 
-$router->get('/test/test-auth', [
+$router->get('/test/auth', [
     'middleware' => ['auth'],
     function (\Laravel\Lumen\Routing\Router $router) {
         if (env('APP_DEBUG')) {
