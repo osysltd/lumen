@@ -6,11 +6,10 @@
     "type": "project",
     "require": {
         "php": "^8.2",
-        "illuminate/cookie": "^11.0",
-        "illuminate/session": "^11.0",
-        "laravel/lumen-framework": "^11.0",
-        "maxsky/lumen-app-key-generator": "^1.0",
-        "nesbot/carbon": "^2.71"
+        "illuminate/cookie": "^11.40",
+        "illuminate/session": "^11.40",
+        "laravel/lumen-framework": "^11.2",
+        "nesbot/carbon": "^2.72"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

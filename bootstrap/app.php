@@ -75,6 +75,7 @@ $app->singleton(
 
 $app->configure('app');
 $app->configure('session');
+$app->configure('auth');
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,7 @@ $app->middleware([
     App\Http\Middleware\ConvertEmptyStringsToNull::class,
     App\Http\Middleware\TrimStrings::class,
     App\Http\Middleware\VerifyCsrfToken::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
 /*
@@ -112,6 +114,7 @@ $app->middleware([
 
 $app->register(\Illuminate\Session\SessionServiceProvider::class);
 $app->register(\Illuminate\Cookie\CookieServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
