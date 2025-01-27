@@ -98,6 +98,9 @@ $app->middleware([
     App\Http\Middleware\ConvertEmptyStringsToNull::class,
     App\Http\Middleware\TrimStrings::class,
     App\Http\Middleware\VerifyCsrfToken::class,
+]);
+
+$app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
