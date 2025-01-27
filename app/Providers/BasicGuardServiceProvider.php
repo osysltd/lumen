@@ -12,10 +12,19 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Container\Container;
 use App\BasicGuard;
 
 class BasicGuardServiceProvider extends ServiceProvider
 {
+    /**
+     * The application instance.
+     *
+     * @var \Illuminate\Container\Container
+     */
+    protected $app;
+
+
     /**
      * Boot the authentication services for the application.
      *

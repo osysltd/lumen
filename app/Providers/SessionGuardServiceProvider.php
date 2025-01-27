@@ -17,6 +17,13 @@ use Illuminate\Auth\SessionGuard;
 class SessionGuardServiceProvider extends ServiceProvider
 {
     /**
+     * The application instance.
+     *
+     * @var \Illuminate\Container\Container
+     */
+    protected $app;
+
+    /**
      * Boot the authentication services for the application.
      *
      * @return \Illuminate\Auth\SessionGuard

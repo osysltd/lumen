@@ -76,6 +76,7 @@ $app->singleton(
 $app->configure('app');
 $app->configure('session');
 $app->configure('auth');
+$app->configure('mail');
 
 /*
 |--------------------------------------------------------------------------
