@@ -116,7 +116,6 @@ if (env('APP_DEBUG')) {
             'middleware' => ['auth:api'],
             function (\Laravel\Lumen\Routing\Router $router) {
                 return $router->app->version();
-
             }
         ]);
 
