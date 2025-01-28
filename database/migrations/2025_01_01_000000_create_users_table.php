@@ -17,12 +17,14 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->unsignedTinyInteger('permission')->default(7);
             $table->string('api_token', 80)
             ->unique()
             ->nullable()
             ->default(null);
-            $table->unsignedTinyInteger('permission')->default(7);
+            $table->rememberToken();
             $table->timestamps();
             $table->timestamp('created_at')->useCurrent()->change();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->change();

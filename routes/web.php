@@ -2,6 +2,12 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Models\User;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -25,125 +31,101 @@ $router->get('/', function () use ($router) {
 |--------------------------------------------------------------------------
 */
 
-// Route::group(['domain' => 'whatever'], $callback);
-// Route::group(['domain' => 'localhost'], function($route) {
-//     Route::get('/', 'FrontendController@index')->name('index');
-//     Route::get('/getTTRegions', 'RegionsController@getTTRegions');
-//     Route::post('/get/cities', 'FrontendController@getCities')->name('get.cities');
-// });
+if (env('APP_DEBUG')) {
+    $router->group([
+        'prefix' => 'test',
+        // 'middleware' => ['auth:api', 'auth:session'],
+        // 'namespace' => 'namespace',
+    ], function () use ($router) {
 
-// Route::any('{myslug}/page/', array('as'=>'bar-page', 'uses'=>'Controllers\MyBar@index'))
-//  ->where('myslug','^([0-9A-Za-z\-]+)?bar([0-9A-Za-z\-]+)?');
-
-/*Route::domain('localhost:8000')->group(function () {
-    Route::get('bla', 'FrontendController@macros')->name('bla');     //
-});*/
-
-//Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-//    return view('dashboard');
-//})->name('dashboard');
-
-// $router->group([
-//     'prefix' => 'hxl',
-//     'middleware' => ['auth:api', 'feature:hxl'],
-//     'namespace' => 'HXL',
-// ], function () use ($router) {
-//     $router->get('/', 'HXLController@index');
-//     $router->get('/licenses', 'HXLLicensesController@index');
-//     $router->get('/tags', 'HXLTagsController@index');
-//     $router->post('/metadata', 'HXLMetadataController@store');
-//     $router->get('/metadata', 'HXLMetadataController@index');
-//     $router->get('/organisations', 'HXLOrganisationsController@index');
-// });
-// $router->group(['middleware' => 'auth'], function () use ($router) {
-//     $router->get('admin/index', [
-//         'as' => 'admin.index', 'uses' => 'AdminController@index'
-//     ]);
-//     $router->post('admin/{id}/update', 'ArtworksController@update');
-//     $router->post('admin/store', ['as' => 'createArtwork', 'uses' => 'ArtworksController@store']);
-//     $router->get('admin', 'AdminController@index');
-//     $router->get('admin/new', 'AdminController@new');
-//     $router->get('admin/{id}/edit', 'AdminController@edit');
-//     $router->get('admin/{id}/destroy', 'AdminController@destroy');
-// });
-
-
-$router->get('/test/auth-web-session', [
-    'middleware' => ['auth:web'],
-    function (\Laravel\Lumen\Routing\Router $router) {
-        if (env('APP_DEBUG')) {
-            return $router->app->version();
-        }
-    }
-]);
-$router->get('/test/auth-api-basic', [
-    'middleware' => ['auth:api'],
-    function (\Laravel\Lumen\Routing\Router $router) {
-        if (env('APP_DEBUG')) {
-            return $router->app->version();
-        }
-    }
-]);
-
-$router->get('/test/session-put', function (\Illuminate\Http\Request $request) {
-    if (env('APP_DEBUG')) {
-        $request->session()->put('name', config('app.name'));
-        return response()->json([
-            'session.name' => $request->session()->get('name'),
-            'session.token' => Session::token()
-        ]);
-    }
-});
-
-$router->get('/test/session-get', function (\Illuminate\Http\Request $request) {
-    if (env('APP_DEBUG')) {
-        return response()->json([
-            'session.name' => $request->session()->get('name'),
-            'session.token' => Session::token()
-        ]);
-    }
-});
-
-$router->get('/test/cookie-set', function () {
-    if (env('APP_DEBUG')) {
-        $response = new Illuminate\Http\Response('Cookie name: name-of-cookie');
-        $response->withCookie(
-            new Symfony\Component\HttpFoundation\Cookie(
-                'name-of-cookie',
-                'value-of-cookie',
-                '2147483647'
-            )
-        );
-        return $response;
-    }
-});
-
-$router->get('/test/cookie-get', function (\Illuminate\Http\Request $request) {
-    if (env('APP_DEBUG')) {
-        dd($request->cookie('name-of-cookie'));
-    }
-});
-
-$router->get('/test/csrf', function (\Illuminate\Http\Request $request) {
-    if (env('APP_DEBUG')) {
-        return view("csrf", []);
-    }
-});
-
-$router->post('/test/csrf-post', function (\Illuminate\Http\Request $request) {
-    if (env('APP_DEBUG')) {
-        try {
-            $this->validate(
-                $request,
-                ['token' => 'required|string|max:40'],
-                ['number' => 'nullable|numeric|digits:1']
+        $router->get('cookie-set', function () {
+            $response = new Illuminate\Http\Response('Cookie name: name-of-cookie');
+            $response->withCookie(
+                new Symfony\Component\HttpFoundation\Cookie(
+                    'name-of-cookie',
+                    'value-of-cookie',
+                    '2147483647'
+                )
             );
-            Session::flash('message', implode(' ', [$request->token, $request->number, Session::token()]));
+            return $response;
+        });
 
-        } catch (\Illuminate\Validation\ValidationException $th) {
-            Session::flash('message', json_encode($th->errors()));
-        } finally {
-            return redirect()->to('/test/csrf');
-        }
-    }
-});
+        $router->get('cookie-get', function (\Illuminate\Http\Request $request) {
+            dd($request->cookie('name-of-cookie'));
+        });
+
+        $router->get('session-put', function (\Illuminate\Http\Request $request) {
+            $request->session()->put('name', config('app.name'));
+            return response()->json([
+                'session.name' => $request->session()->get('name'),
+                'session.token' => Session::token()
+            ]);
+        });
+
+        $router->get('session-get', function (\Illuminate\Http\Request $request) {
+            return response()->json([
+                'session.name' => $request->session()->get('name'),
+                'session.token' => Session::token()
+            ]);
+        });
+
+        $router->get('csrf-form', function (\Illuminate\Http\Request $request) {
+            return view("csrf", []);
+        });
+
+        $router->post('csrf-post', function (\Illuminate\Http\Request $request) {
+            try {
+                $this->validate(
+                    $request,
+                    ['token' => 'required|string|max:40'],
+                    ['number' => 'nullable|numeric|digits:1']
+                );
+                Session::flash('message', implode(' ', [$request->token, $request->number, Session::token()]));
+
+            } catch (\Illuminate\Validation\ValidationException $th) {
+                Session::flash('message', json_encode($th->errors()));
+            } finally {
+                return redirect()->to('/test/csrf-form');
+            }
+
+        });
+
+        $router->get('login', function () use ($router) {
+            $user = User::create([
+                'name' => 'Name',
+                'email' => 'Email',
+                'password' => Hash::make('password')
+            ]);
+            Auth::login($user);
+            return $router->app->version();
+        });
+
+        $router->get('logout', function () use ($router) {
+            Auth::logout();
+            return $router->app->version();
+        });
+
+        $router->get('auth-web-session', [
+            'middleware' => ['auth:web'],
+            function (\Laravel\Lumen\Routing\Router $router) {
+                dd(Auth::user());
+            }
+        ]);
+
+        $router->get('auth-api-basic', [
+            'middleware' => ['auth:api'],
+            function (\Laravel\Lumen\Routing\Router $router) {
+                return $router->app->version();
+
+            }
+        ]);
+
+        $router->get('index', [
+            'as' => 'test.index',
+            'uses' => 'TestController@index'
+        ]);
+
+    });
+
+}
+;
