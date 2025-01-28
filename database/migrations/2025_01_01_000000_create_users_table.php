@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             ->unique()
             ->nullable()
             ->default(null);
+            $table->unsignedTinyInteger('permission')->default(7);
             $table->timestamps();
             $table->timestamp('created_at')->useCurrent()->change();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate()->change();

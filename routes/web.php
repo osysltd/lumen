@@ -68,7 +68,7 @@ $router->get('/', function () use ($router) {
 // });
 
 
-$router->get('/test/auth-session', [
+$router->get('/test/auth-web-session', [
     'middleware' => ['auth:web'],
     function (\Laravel\Lumen\Routing\Router $router) {
         if (env('APP_DEBUG')) {
@@ -76,8 +76,7 @@ $router->get('/test/auth-session', [
         }
     }
 ]);
-
-$router->get('/test/auth-basic', [
+$router->get('/test/auth-api-basic', [
     'middleware' => ['auth:api'],
     function (\Laravel\Lumen\Routing\Router $router) {
         if (env('APP_DEBUG')) {
