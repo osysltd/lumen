@@ -44,10 +44,10 @@ return [
             'driver' => 'basic',
             'provider' => 'users'
         ],
-        'tokens' => [
-            'driver' => 'token',
-            'provider' => 'shares',
-        ],
+        // 'tokens' => [
+        //     'driver' => 'token',
+        //     'provider' => 'shares',
+        // ],
     ],
 
     /*
@@ -72,10 +72,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'tokens' => [
-            'driver' => 'database',
-            'table' => 'users',
-        ],
+        // 'tokens' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
     ],
 
     /*
