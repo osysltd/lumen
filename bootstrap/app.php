@@ -99,10 +99,20 @@ $app->middleware([
     App\Http\Middleware\ConvertEmptyStringsToNull::class,
     App\Http\Middleware\TrimStrings::class,
     App\Http\Middleware\VerifyCsrfToken::class,
+    App\Http\Middleware\TrustHosts::class,
+    App\Http\Middleware\TrustProxies::class,
 ]);
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
+    'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+    'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+    'can' => \Illuminate\Auth\Middleware\Authorize::class,
+    'guest' => App\Http\Middleware\RedirectIfAuthenticated::class,
+    'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+    'signed' => App\Http\Middleware\ValidateSignature::class,
+    'throttle' => App\Http\Middleware\ThrottleRequests::class,
+    'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 ]);
 
 /*

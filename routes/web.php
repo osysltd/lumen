@@ -3,6 +3,7 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Models\User;
+use App\Http\Controllers\AuthController;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +24,20 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->get('home', ['as' => 'home', 'uses' => 'AuthController@home']);
+$router->get('profile', ['as' => 'profile', 'uses' => 'AuthController@profile']);
+
+$router->get('login', ['as' => 'login', 'middleware' => 'guest', 'uses' => 'AuthController@index']);
+$router->get('register', ['as' => 'register', 'middleware' => 'guest', 'uses' => 'AuthController@register']);
+$router->get('recovery', ['as' => 'recovery', 'middleware' => 'guest', 'uses' => 'AuthController@recovery']);
+
+$router->get('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
+
+$router->post('dologin', ['as' => 'login.do', 'middleware' => 'guest', 'uses' => 'AuthController@doLogin']);
+$router->post('doregistration', ['as' => 'registration.do', 'middleware' => 'guest', 'uses' => 'AuthController@doRegistration']);
+$router->post('dorecovery', ['as' => 'recovery.do', 'middleware' => 'guest', 'uses' => 'AuthController@doRecovery']);
+
+
 /*
 |--------------------------------------------------------------------------
 | Session and Cookies Support Tests
@@ -34,6 +49,7 @@ $router->get('/', function () use ($router) {
 if (env('APP_DEBUG')) {
     $router->group([
         'prefix' => 'test',
+        // ['domain' => 'localhost'],
         // 'middleware' => ['auth:api', 'auth:session'],
         // 'namespace' => 'namespace',
     ], function () use ($router) {
@@ -77,13 +93,15 @@ if (env('APP_DEBUG')) {
             try {
                 $this->validate(
                     $request,
-                    ['token' => 'required|string|max:40'],
-                    ['number' => 'nullable|numeric|digits:1']
+                    [
+                        'token' => 'required|string|max:40',
+                        'number' => 'nullable|numeric|digits:1'
+                    ]
                 );
                 Session::flash('message', implode(' ', [$request->token, $request->number, Session::token()]));
 
             } catch (\Illuminate\Validation\ValidationException $th) {
-                Session::flash('message', json_encode($th->errors()));
+                Session::flash('message', value: json_encode($th->errors()));
             } finally {
                 return redirect()->to('/test/csrf-form');
             }
@@ -101,6 +119,7 @@ if (env('APP_DEBUG')) {
         });
 
         $router->get('logout', function () use ($router) {
+            Session::flush();
             Auth::logout();
             return $router->app->version();
         });
