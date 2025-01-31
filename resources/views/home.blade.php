@@ -35,9 +35,10 @@
                     @guest
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ route('login') }}">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('recovery') }}">Recovery</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('reset') }}">Recovery</a></li>
                     @else
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('profile') }}">Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}">Logout</a></li>
                     @endguest
                 </ul>
@@ -55,7 +56,7 @@
                 </p>
             </div>
         </div>
-    </div>        
+    </div>
     @endif
 
 
@@ -134,7 +135,7 @@
     </div>
 
     <!-- Footer-->
-    <footer class="py-5 bg-dark">
+    <footer class="py-4 bg-dark mt-auto">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between small">
                 <div class="text-muted">Copyleft &copy; {{ config('app.name') . ' ' . date('Y') }}</div>

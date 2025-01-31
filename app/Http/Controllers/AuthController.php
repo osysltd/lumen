@@ -13,10 +13,10 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
-
     public function index()
     {
         return view('auth.login');
@@ -35,8 +35,7 @@ class AuthController extends Controller
             );
 
             $credentials = $request->only('email', 'password');
-
-            if (Auth::attempt($credentials)) {
+            if (Auth::attempt($credentials, (bool) $request->remember)) {
                 Session::flash('message', 'You have signed in successfully');
                 return redirect()->route('home');
             }
@@ -45,7 +44,6 @@ class AuthController extends Controller
         } finally {
             Session::flash('message', 'Email address or password is incorrect');
             return redirect()->route('login');
-
         }
     }
 
@@ -56,7 +54,7 @@ class AuthController extends Controller
     }
 
 
-    public function doRegistration(\Illuminate\Http\Request $request)
+    public function doRegister(\Illuminate\Http\Request $request)
     {
         try {
             $this->validate(
@@ -64,15 +62,14 @@ class AuthController extends Controller
                 [
                     'name' => 'required',
                     'email' => 'required|email|unique:users',
-                    'password' => ['required', 'confirmed'],
+                    'password' => ['required', 'confirmed', Rules\Password::defaults()],
                 ]
             );
 
-            Session::flash('message', 'You have registered successfully');
+            Session::flash('message', 'You have been registered successfully');
             $data = $request->all();
             $user = $this->create($data);
-            Auth::login($user);
-
+            Auth::login($user, true);
             return redirect()->route('home');
 
         } catch (\Illuminate\Validation\ValidationException $th) {
@@ -82,9 +79,9 @@ class AuthController extends Controller
     }
 
 
-    public function recovery()
+    public function reset()
     {
-        return view('auth.recovery');
+        return view('auth.reset');
     }
 
 
@@ -93,12 +90,12 @@ class AuthController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function doRecovery(Request $request): RedirectResponse
+    public function doReset(Request $request): RedirectResponse
     {
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['min:6', 'required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         // Here we will attempt to reset the user's password. If it is successful we
@@ -141,18 +138,46 @@ class AuthController extends Controller
         if (Auth::check()) {
             return view('home');
         }
-        Session::flash('message', 'You are not allowed to access');
-
+        Session::flash('message', 'You are not allowed to access this page');
         return redirect('login');
     }
+
 
     public function profile()
     {
         if (Auth::check()) {
-            return view('profile.edit');
+            return view('auth.profile', ['user' => Auth::user()]);
         }
-        Session::flash('message', 'You are not allowed to access');
+        Session::flash('message', 'You are not allowed to access this page');
+        return redirect('login');
+    }
 
+
+    public function doProfile(Request $request)
+    {
+        if (Auth::check()) {
+            try {
+                $this->validate(
+                    $request,
+                    [
+                        'name' => 'required',
+                        'email' => ['required', 'email', Rule::unique('users')->ignore(Auth::user()->id, 'id')],
+                        'password' => ['nullable', 'required_with:password_confirmation', 'same:password_confirmation', Rules\Password::defaults()],
+                        'password_confirmation' => ['nullable', Rules\Password::defaults()]
+                    ]
+                );
+
+                Auth::user()->update(collect($request->all())->filter()->all());
+
+                Session::flash('message', 'Your profile has been updated successfully');
+                return redirect()->route('profile');
+
+            } catch (\Illuminate\Validation\ValidationException $th) {
+                Session::flash('message', json_encode($th->errors()));
+                return redirect()->route('profile');
+            }
+        }
+        Session::flash('message', 'You are not allowed to access this page');
         return redirect('login');
     }
 

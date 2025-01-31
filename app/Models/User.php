@@ -21,6 +21,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     const API_USER = 1;
     const SHARE_USER = 2;
+    const REGULAR_USER = 7;
     const UNAUTHORIZED_USER = 0;
 
     /**
@@ -29,7 +30,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'api_token',
+        'name', 'email', 'password',
     ];
 
     /**
@@ -38,7 +39,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password', 'api_token',
+        'password', 'api_token', 'remember_token',
+
     ];
 
     public function sendPasswordResetNotification($token)
@@ -51,13 +53,4 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return '/reset';
     }
 
-    public static function getAuthenticationType(): int
-    {
-        if (Auth::guard('api')->check()) {
-            return self::API_USER;
-        } else if (Auth::guard('share')->check()) {
-            return self::SHARE_USER;
-        }
-        return self::UNAUTHORIZED_USER;
-    }
 }

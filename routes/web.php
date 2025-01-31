@@ -24,18 +24,19 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('home', ['as' => 'home', 'uses' => 'AuthController@home']);
-$router->get('profile', ['as' => 'profile', 'uses' => 'AuthController@profile']);
+$router->get('home', ['as' => 'home', 'middleware' => 'auth:web', 'uses' => 'AuthController@home']);
+$router->get('profile', ['as' => 'profile', 'middleware' => 'auth:web', 'uses' => 'AuthController@profile']);
 
 $router->get('login', ['as' => 'login', 'middleware' => 'guest', 'uses' => 'AuthController@index']);
 $router->get('register', ['as' => 'register', 'middleware' => 'guest', 'uses' => 'AuthController@register']);
-$router->get('recovery', ['as' => 'recovery', 'middleware' => 'guest', 'uses' => 'AuthController@recovery']);
+$router->get('reset', ['as' => 'reset', 'middleware' => 'guest', 'uses' => 'AuthController@reset']);
 
-$router->get('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
+$router->get('logout', ['as' => 'logout', 'middleware' => 'auth:web', 'uses' => 'AuthController@logout']);
 
-$router->post('dologin', ['as' => 'login.do', 'middleware' => 'guest', 'uses' => 'AuthController@doLogin']);
-$router->post('doregistration', ['as' => 'registration.do', 'middleware' => 'guest', 'uses' => 'AuthController@doRegistration']);
-$router->post('dorecovery', ['as' => 'recovery.do', 'middleware' => 'guest', 'uses' => 'AuthController@doRecovery']);
+$router->post('login', ['as' => 'login.do', 'middleware' => 'guest', 'uses' => 'AuthController@doLogin']);
+$router->post('register', ['as' => 'register.do', 'middleware' => 'guest', 'uses' => 'AuthController@doRegister']);
+$router->post('reset', ['as' => 'reset.do', 'middleware' => 'guest', 'uses' => 'AuthController@doReset']);
+$router->post('profile', ['as' => 'profile.do', 'middleware' => 'auth:web', 'uses' => 'AuthController@doProfile']);
 
 
 /*

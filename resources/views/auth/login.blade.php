@@ -8,7 +8,7 @@
             <div class="col-lg-4">
                 <div class="card shadow-lg border-0 rounded-lg mt-3">
                     <div class="card-header">
-                        <h3 class="text-center font-weight-light my-4">Login</h3>
+                        <h3 class="text-center font-weight-light my-2">Login</h3>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('login.do') }}">
@@ -22,11 +22,11 @@
                                 <label for="inputPassword">Password</label>
                             </div>
                             <div class="form-check mb-3">
-                                <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
+                                <input class="form-check-input" id="inputRememberPassword" name="remember" type="checkbox" />
                                 <label class="form-check-label" for="inputRememberPassword">Remember Me</label>
                             </div>
                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                <a class="small" href="{{ route('recovery') }}">Forgot Password?</a>
+                                <a class="small" href="{{ route('reset') }}">Forgot Password?</a>
                                 <button type="submit" class="btn btn-primary">Login</button>
                             </div>
                         </form>
