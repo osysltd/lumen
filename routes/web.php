@@ -45,15 +45,6 @@ $router->group(['prefix' => 'user'], function () use ($router) {
     $router->get('verify/{id}/{hash}', ['as' => 'verification.send', 'uses' => 'AuthController@verify']);
     $router->post('send', ['as' => 'verification.verify', 'uses' => 'AuthController@send']);
 
-
-    // Route::get('/email/verify', 'notice')->name('verification.notice');
-    // Route::get('/email/verify/{id}/{hash}', 'verify')->name('verification.verify');
-    // Route::post('/email/resend', 'resend')->name('verification.resend');
-
-
-    // $router->get('verify', ['as' => 'verification.notice', 'uses' => 'AuthController@notice']);
-    // $router->get('verify/{id}/{hash}', ['as' => 'verification.verify', 'uses' => 'AuthController@verify']);
-    // $router->post('send', ['as' => 'verification.send1', 'uses' => 'AuthController@send']);
 });
 
 

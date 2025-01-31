@@ -37,7 +37,8 @@ class AuthController extends Controller
             'profile',
             'doProfile',
             'notice',
-            'verify'
+            'verify',
+            'send'
         ]);
 
         $this->middleware('signed', ['only' => 'verify']);
@@ -199,7 +200,15 @@ class AuthController extends Controller
                     ]
                 );
 
-                Auth::user()->update(collect($request->all())->filter()->all());
+                $user = User::find(Auth::user()->id);
+                $user->update(collect($request->all())->filter()->all());
+
+                if ($user->getChanges('email')) {
+                    $request->user()->sendEmailVerificationNotification();
+                }
+
+                $user->save();
+                Auth::setUser($user);
 
                 Session::flash('message', 'Your profile has been updated successfully!');
                 return redirect()->route('profile');
@@ -232,11 +241,11 @@ class AuthController extends Controller
      */
     public function notice(Request $request)
     {
-        return $request->user()->hasVerifiedEmail() 
+        return $request->user()->hasVerifiedEmail()
             ? redirect()->route('home') : view('auth.verify');
     }
 
-     /**
+    /**
      * User's email verificaiton.
      *
      * @param  \App\Http\EmailVerificationRequest $request
@@ -245,7 +254,9 @@ class AuthController extends Controller
     public function verify(EmailVerificationRequest $request)
     {
         $request->fulfill();
-        return redirect()->route('home');
+        Session::flash('message', 'Your email address has been verified successfully!');
+        
+        return redirect()->route('profile');
     }
 
     /**
@@ -259,8 +270,8 @@ class AuthController extends Controller
         $request->user()->sendEmailVerificationNotification();
         Session::flash('message', 'A fresh verification link has been sent to your email address.');
         
+        // return redirect()->route(route: 'verify');
         return view('auth.login');
 
-        // return redirect()->route(route: 'verify');
     }
 }

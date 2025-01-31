@@ -97,6 +97,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         ])->save();
     }
 
+
     /**
      * Send the email verification notification.
      *
@@ -104,9 +105,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function sendEmailVerificationNotification()
     {
-        $this->notify(new VerifyEmail);
         // $this->notify(new \App\Notifications\ResetPassword($token));
-
+        $this->forceFill(['email_verified_at' => null])->save();
+        $this->notify(new VerifyEmail);
     }
 
     /**
