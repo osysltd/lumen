@@ -35,7 +35,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
     ];
 
     /**
@@ -44,12 +46,14 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'password', 'api_token', 'remember_token',
+        'password',
+        'api_token',
+        'remember_token',
 
     ];
 
 
-        /**
+    /**
      * Send the password reset notification.
      *
      * @param  string  $token
@@ -65,7 +69,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      *
      * @var array
      */
-    public function setRememberToken($token) {
+    public function setRememberToken($token)
+    {
         $this->remember_token = $token;
     }
 
@@ -115,12 +120,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
 
-    public static function resetUrl()
-    {
-        return '/reset';
-    }
-
-        /**
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>

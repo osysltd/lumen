@@ -30,8 +30,8 @@ $app->withFacades(true, [
     \Illuminate\Support\Facades\Request::class => 'Request',
     \Illuminate\Support\Facades\Session::class => 'Session',
     \Illuminate\Support\Facades\Cookie::class => 'Cookie',
-    // \Illuminate\Support\Facades\Mail::class => 'Mail',
-    // \Illuminate\Support\Facades\Notification::class => 'Notification',
+    \Illuminate\Support\Facades\Mail::class => 'Mail',
+    \Illuminate\Support\Facades\Notification::class => 'Notification',
 
 ]);
 
@@ -43,12 +43,15 @@ $app->alias('session.store', \Illuminate\Contracts\Session\Session::class);
 $app->alias('cookie', \Illuminate\Cookie\CookieJar::class);
 $app->alias('cookie', \Illuminate\Contracts\Cookie\Factory::class);
 $app->alias('cookie', \Illuminate\Contracts\Cookie\QueueingFactory::class);
-// $app->alias('mailer', \Illuminate\Mail\Mailer::class);
-// $app->alias('mailer', \Illuminate\Contracts\Mail\Mailer::class);
-// $app->alias('mailer', \Illuminate\Contracts\Mail\MailQueue::class);
-// $app->alias('mail.manager', \Illuminate\Mail\MailManager::class);
-// $app->alias('mail.manager', \Illuminate\Contracts\Mail\Factory::class);
-// $app->alias('url', \App\Http\UrlGenerator::class);
+
+$app->alias('mailer', \Illuminate\Mail\Mailer::class);
+$app->alias('mailer', \Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', \Illuminate\Contracts\Mail\MailQueue::class);
+
+$app->alias('mail.manager', \Illuminate\Mail\MailManager::class);
+$app->alias('mail.manager', \Illuminate\Contracts\Mail\Factory::class);
+
+$app->alias('view', Illuminate\View\Factory::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +89,7 @@ $app->configure('app');
 $app->configure('session');
 $app->configure('auth');
 $app->configure('mail');
+$app->configure('view');
 
 /*
 |--------------------------------------------------------------------------
@@ -140,8 +144,9 @@ $app->register(\Illuminate\Cookie\CookieServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(App\Providers\SessionGuardServiceProvider::class);
 $app->register(App\Providers\BasicGuardServiceProvider::class);
-// $app->register(\Illuminate\Mail\MailServiceProvider::class);
-// $app->register(\Illuminate\Notifications\NotificationServiceProvider::class);
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
+$app->register(\Illuminate\Notifications\NotificationServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

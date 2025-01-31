@@ -37,6 +37,8 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('reset') }}">Recovery</a></li>
                     @else
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('verification.notice') }}">Verify</a></li>
+
                     <li class="nav-item"><a class="nav-link" href="{{ route('profile') }}">Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}">Logout</a></li>
                     @endguest
@@ -53,7 +55,7 @@
 
 
             <!-- Call to Action-->
-                @if ($message = Session::get('message'))
+            @if ($message = Session::get('message'))
             <div class="container px-4 px-lg-5">
                 <div class="card text-white bg-secondary my-3 py-1 text-center">
                     <div class="card-body">

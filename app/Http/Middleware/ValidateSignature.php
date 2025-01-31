@@ -5,7 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Routing\Exceptions\InvalidSignatureException;
 use Illuminate\Support\Arr;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Http\Request;
+use App\Http\UrlGenerator;
 
 class ValidateSignature
 {
@@ -61,17 +63,20 @@ class ValidateSignature
      * @param  array|null  $args
      * @return \Illuminate\Http\Response
      *
-     * @throws UnauthorizedHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException;
      */
     public function handle($request, Closure $next, ...$args)
     {
         [$relative, $ignore] = $this->parseArguments($args);
 
-        if ($request->hasValidSignatureWhileIgnoring($ignore, ! $relative)) {
+        $url = new UrlGenerator(app());
+
+        // if ($request->hasValidSignatureWhileIgnoring($ignore, ! $relative)) {
+        if ($url->hasValidSignatureWhileIgnoring($ignore, ! $relative)) {
             return $next($request);
         }
 
-        throw new UnauthorizedHttpException(403, 'Invalid signature.');;
+        throw new HttpException(403, 'Invalid signature.');;
     }
 
     /**

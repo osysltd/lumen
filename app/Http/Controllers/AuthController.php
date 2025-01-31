@@ -17,6 +17,7 @@ use Illuminate\Validation\Rule;
 use App\Http\EmailVerificationRequest;
 use Illuminate\Auth\Events\Registered;
 
+
 class AuthController extends Controller
 {
     public function __construct()
@@ -31,17 +32,19 @@ class AuthController extends Controller
             'doReset'
         ]);
 
-        $this->middleware('auth', [
+        $this->middleware('auth:web', [
             'only' => 'home',
             'profile',
             'doProfile',
-            'verify',
             'notice',
-            'resend'
+            'verify'
         ]);
 
         $this->middleware('signed', ['only' => 'verify']);
-        $this->middleware('throttle:6,1', ['only' => 'verify', 'resend']);
+
+
+        $this->middleware('signed', ['only' => 'verify']);
+        $this->middleware('throttle:6,1', ['only' => 'verify', 'send']);
 
     }
 
@@ -229,11 +232,11 @@ class AuthController extends Controller
      */
     public function notice(Request $request)
     {
-        return $request->user()->hasVerifiedEmail()
+        return $request->user()->hasVerifiedEmail() 
             ? redirect()->route('home') : view('auth.verify');
     }
 
-    /**
+     /**
      * User's email verificaiton.
      *
      * @param  \App\Http\EmailVerificationRequest $request
@@ -251,10 +254,13 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function resend(Request $request)
+    public function send(Request $request)
     {
         $request->user()->sendEmailVerificationNotification();
         Session::flash('message', 'A fresh verification link has been sent to your email address.');
-        return back();
+        
+        return view('auth.login');
+
+        // return redirect()->route(route: 'verify');
     }
 }
