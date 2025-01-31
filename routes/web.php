@@ -21,22 +21,29 @@ use Illuminate\Support\Facades\Hash;
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    //return $router->app->version();
+    return view("auth.login", []);
+
 });
 
-$router->get('home', ['as' => 'home', 'middleware' => 'auth:web', 'uses' => 'AuthController@home']);
-$router->get('profile', ['as' => 'profile', 'middleware' => 'auth:web', 'uses' => 'AuthController@profile']);
+$router->group(['prefix' => 'user'], function () use ($router) {
+    $router->get('login', ['as' => 'login', 'uses' => 'AuthController@login']);
+    $router->get('register', ['as' => 'register', 'uses' => 'AuthController@register']);
+    $router->get('reset', ['as' => 'reset', 'uses' => 'AuthController@reset']);
+    $router->get('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
 
-$router->get('login', ['as' => 'login', 'middleware' => 'guest', 'uses' => 'AuthController@index']);
-$router->get('register', ['as' => 'register', 'middleware' => 'guest', 'uses' => 'AuthController@register']);
-$router->get('reset', ['as' => 'reset', 'middleware' => 'guest', 'uses' => 'AuthController@reset']);
+    $router->get('home', ['as' => 'home', 'uses' => 'AuthController@home']);
+    $router->get('/', ['as' => 'profile', 'uses' => 'AuthController@profile']);
 
-$router->get('logout', ['as' => 'logout', 'middleware' => 'auth:web', 'uses' => 'AuthController@logout']);
+    $router->post('login', ['as' => 'login.do', 'uses' => 'AuthController@doLogin']);
+    $router->post('register', ['as' => 'register.do', 'uses' => 'AuthController@doRegister']);
+    $router->post('reset', ['as' => 'reset.do', 'uses' => 'AuthController@doReset']);
+    $router->post('profile', ['as' => 'profile.do', 'uses' => 'AuthController@doProfile']);
 
-$router->post('login', ['as' => 'login.do', 'middleware' => 'guest', 'uses' => 'AuthController@doLogin']);
-$router->post('register', ['as' => 'register.do', 'middleware' => 'guest', 'uses' => 'AuthController@doRegister']);
-$router->post('reset', ['as' => 'reset.do', 'middleware' => 'guest', 'uses' => 'AuthController@doReset']);
-$router->post('profile', ['as' => 'profile.do', 'middleware' => 'auth:web', 'uses' => 'AuthController@doProfile']);
+    $router->get('verify', ['as' => 'verification.notice', 'uses' => 'AuthController@notice']);
+    $router->get('verify/{id}/{hash}', ['as' => 'verification.verify', 'uses' => 'AuthController@verify']);
+    $router->post('resend', ['as' => 'verification.resend', 'uses' => 'AuthController@resend']);
+});
 
 
 /*

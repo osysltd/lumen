@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Container\Container;
-use App\BasicGuard;
+use App\Http\BasicGuard;
 
 class BasicGuardServiceProvider extends ServiceProvider
 {

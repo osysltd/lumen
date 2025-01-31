@@ -6,9 +6,9 @@
         <!-- Page Features-->
         <div class="row gx-lg-5 mb-5 justify-content-center">
             <div class="col-lg-5">
-                <div class="card shadow-lg border-0 rounded-lg mt-3">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
                     <div class="card-header">
-                        <h3 class="text-center font-weight-light my-2">Password Recovery</h3>
+                        <h3 class="text-center font-weight-light my-4">Password Recovery</h3>
                     </div>
                     <div class="card-body">
                         <div class="small mb-3 text-muted">Enter your email address and we will send you a link to reset your password.</div>
@@ -16,7 +16,7 @@
                             <input type="hidden" name="_token" value="{{ Session::token() }}" />
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" />
-                                <label for="inputEmail">Email address</label>
+                                <label for="inputEmail">Email Address</label>
                             </div>
                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                 <a class="small" href="{{ route('login') }}">Return to login</a>

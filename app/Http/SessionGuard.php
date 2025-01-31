@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Http;
 
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Auth\Events\Attempting;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Http;
 
 use Illuminate\Auth\Events;
 use Illuminate\Auth\GuardHelpers;

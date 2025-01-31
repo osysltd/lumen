@@ -6,9 +6,9 @@
         <!-- Page Features-->
         <div class="row gx-lg-5 mb-5 justify-content-center">
             <div class="col-lg-7">
-                <div class="card shadow-lg border-0 rounded-lg mt-3">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
                     <div class="card-header">
-                        <h3 class="text-center font-weight-light my-2">Create Account</h3>
+                        <h3 class="text-center font-weight-light my-4">Create Account</h3>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('register.do') }}">
@@ -19,7 +19,7 @@
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" />
-                                <label for="inputEmail">Email address</label>
+                                <label for="inputEmail">Email Address</label>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">

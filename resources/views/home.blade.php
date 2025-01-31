@@ -19,7 +19,6 @@
     <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="/css/styles.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -46,110 +45,131 @@
         </div>
     </nav>
 
-    <!-- Call to Action-->
-    @if(Session::get('message'))
-    <div class="container px-4 px-lg-5">
-        <div class="card text-white bg-secondary my-2 py-0 text-center">
-            <div class="card-body">
-                <p class="text-white m-0">
-                    {{ Session::get('message') }}
-                </p>
+
+    <div id="layout" style="display: flex; flex-direction: column; min-height: 100vh;">
+        <div id="layout_content" style="min-width: 0; flex-grow: 1;">
+
+
+
+
+            <!-- Call to Action-->
+                @if ($message = Session::get('message'))
+            <div class="container px-4 px-lg-5">
+                <div class="card text-white bg-secondary my-3 py-1 text-center">
+                    <div class="card-body">
+                        <p class="text-white m-0">
+                            {{ $message }}
+                        </p>
+                    </div>
+                </div>
             </div>
+            @endif
+
+
+            <!-- Header-->
+            {{-- <header class="py-2">
+                <div class="container px-lg-5">
+                    <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                        <div class="m-4 m-lg-5">
+                            <h1 class="display-5 fw-bold">A warm welcome!</h1>
+                            <p class="fs-4">Bootstrap utility classes are used to create this jumbotron since the old component has been removed from the framework. Why create custom CSS when you can use utilities?</p>
+                            <a class="btn btn-primary btn-lg" href="#!">Call to action</a>
+                        </div>
+                    </div>
+                </div>
+            </header> --}}
+
+
+
+            <!-- Page Content-->
+            @yield('content')
+
+            <!-- Content Row-->
+            {{-- <div class="container pt-4 px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-4 mb-5">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">Card One</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                            </div>
+                            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-5">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">Card Two</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex natus at dolorem enim! Nesciunt pariatur voluptatem sunt quam eaque, vel, non in id dolore voluptates quos eligendi labore.</p>
+                            </div>
+                            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-5">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">Card Three</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                            </div>
+                            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-4 mb-5">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">Card Four</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                            </div>
+                            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-5">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="card-title">Card Five</h2>
+                                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+                            </div>
+                            <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+
+
+
+
+
+
+
+
         </div>
+
     </div>
-    @endif
 
-
-    <!-- Header-->
-    {{-- <header class="py-2">
-        <div class="container px-lg-5">
-            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
-                <div class="m-4 m-lg-5">
-                    <h1 class="display-5 fw-bold">A warm welcome!</h1>
-                    <p class="fs-4">Bootstrap utility classes are used to create this jumbotron since the old component has been removed from the framework. Why create custom CSS when you can use utilities?</p>
-                    <a class="btn btn-primary btn-lg" href="#!">Call to action</a>
-                </div>
-            </div>
-        </div>
-    </header> --}}
-
-
-
-    <!-- Page Content-->
-    @yield('content')
-
-    <!-- Content Row-->
-    <div class="container pt-4 px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5">
-            <div class="col-md-4 mb-5">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Card One</h2>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
+    <div id="layout_footer">
+        <!-- Footer-->
+        <footer class="py-4 bg-dark mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyleft &copy; {{ config('app.name') . ' ' . date('Y') }}</div>
+                    <div class="text-muted">
+                        <a class="link-secondary" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Terms &amp; Conditions</a>
+                        &otimes;
+                        <a a class="link-secondary" href="https://www.commerce.gov/about/policies/privacy" target="_blank">Privacy Policy Adherence</a>
                     </div>
-                    <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
                 </div>
             </div>
+        </footer>
 
-            <div class="col-md-4 mb-5">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Card Two</h2>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod tenetur ex natus at dolorem enim! Nesciunt pariatur voluptatem sunt quam eaque, vel, non in id dolore voluptates quos eligendi labore.</p>
-                    </div>
-                    <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-5">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Card Three</h2>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
-                    </div>
-                    <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
-                </div>
-            </div>
-
-
-            <div class="col-md-4 mb-5">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Card Four</h2>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
-                    </div>
-                    <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-5">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="card-title">Card Five</h2>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem magni quas ex numquam, maxime minus quam molestias corporis quod, ea minima accusamus.</p>
-                    </div>
-                    <div class="card-footer"><a class="btn btn-primary btn-sm" href="#!">More Info</a></div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Footer-->
-    <footer class="py-4 bg-dark mt-auto">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyleft &copy; {{ config('app.name') . ' ' . date('Y') }}</div>
-                <div class="text-black">
-                    <a class="link-secondary" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Terms &amp; Conditions</a>
-                    &harr;
-                    <a a class="link-secondary" href="https://www.commerce.gov/about/policies/privacy" target="_blank">Privacy Policy Adherence</a>
-                </div>
-            </div>
-        </div>
-    </footer>
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
-    {{-- <script src="js/scripts.js"></script> --}}
 </body>
 </html>
