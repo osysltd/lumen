@@ -2,7 +2,6 @@
 @section('content')
 
 <section class="pt-2">
-
     <div class="container px-lg-5">
         @if (!$user->hasVerifiedEmail())
         <div class="row justify-content-center mt-3">
@@ -16,8 +15,8 @@
                             <div class="text-end text-center">
                                 <button class="btn btn-primary" type="submit" id="verify-button">Verify</button>
                             </div>
+                        </form>
                     </div>
-                    </form>
                 </div>
             </div>
         </div>
