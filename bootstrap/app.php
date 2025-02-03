@@ -32,10 +32,13 @@ $app->withFacades(true, [
     \Illuminate\Support\Facades\Cookie::class => 'Cookie',
     \Illuminate\Support\Facades\Mail::class => 'Mail',
     \Illuminate\Support\Facades\Notification::class => 'Notification',
+    \Illuminate\Support\Facades\Password::class => 'Password',
 
 ]);
 
 $app->withEloquent();
+
+
 
 $app->alias('session', \Illuminate\Session\SessionManager::class);
 $app->alias('session.store', \Illuminate\Session\Store::class);
@@ -52,6 +55,12 @@ $app->alias('mail.manager', \Illuminate\Mail\MailManager::class);
 $app->alias('mail.manager', \Illuminate\Contracts\Mail\Factory::class);
 
 $app->alias('view', Illuminate\View\Factory::class);
+
+$app->alias('auth.password', \Illuminate\Support\Facades\Password::class);
+$app->alias('auth.password', \Illuminate\Auth\Passwords\PasswordBrokerManager::class);
+$app->alias('auth.password', \Illuminate\Contracts\Auth\PasswordBrokerFactory::class);
+$app->alias('auth.password.broker', \Illuminate\Auth\Passwords\PasswordBroker::class);
+$app->alias('auth.password.broker',  \Illuminate\Contracts\Auth\PasswordBroker::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -146,6 +155,7 @@ $app->register(App\Providers\SessionGuardServiceProvider::class);
 $app->register(App\Providers\BasicGuardServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
 $app->register(\Illuminate\Notifications\NotificationServiceProvider::class);
+$app->register(\Illuminate\Auth\Passwords\PasswordResetServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

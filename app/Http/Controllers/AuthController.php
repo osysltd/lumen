@@ -24,28 +24,29 @@ class AuthController extends Controller
     {
 
         $this->middleware('guest', [
-            'only' => 'login',
-            'doLogin',
-            'register',
-            'doRegister',
-            'reset',
-            'doReset'
+            'only' => [
+                'login',
+                'doLogin',
+                'register',
+                'doRegister',
+                'reset',
+                'doReset'
+            ]
         ]);
 
         $this->middleware('auth:web', [
-            'only' => 'home',
-            'profile',
-            'doProfile',
-            'notice',
-            'verify',
-            'send'
+            'only' => [
+                'home',
+                'profile',
+                'doProfile',
+                'notice',
+                'verify',
+                'doSend'
+            ]
         ]);
 
         $this->middleware('signed', ['only' => 'verify']);
-
-
-        $this->middleware('signed', ['only' => 'verify']);
-        $this->middleware('throttle:6,1', ['only' => 'verify', 'send']);
+        $this->middleware('throttle:6,1', ['only' => ['verify', 'send', 'notice', 'doProfile']]);
 
     }
 
@@ -67,7 +68,7 @@ class AuthController extends Controller
             );
 
             $credentials = $request->only('email', 'password');
-            if (Auth::attempt($credentials, (bool) $request->remember)) {
+            if (Auth::attempt($credentials, (bool) $request->only('remember'))) {
                 Session::flash('message', 'You have signed in successfully!');
                 return redirect()->route('home');
             }
@@ -98,12 +99,13 @@ class AuthController extends Controller
                 ]
             );
 
-            Session::flash('message', 'You have been registered successfully!');
             $data = $request->all();
             $user = $this->create($data);
             Auth::login($user, true);
             event(new Registered($user));
-            return redirect()->route('home');
+            $request->user()->sendEmailVerificationNotification();
+            Session::flash('message', 'You have been registered successfully!');
+            return redirect()->route('verification.notice');
 
         } catch (\Illuminate\Validation\ValidationException $th) {
             Session::flash('message', json_encode($th->errors()));
@@ -125,7 +127,7 @@ class AuthController extends Controller
      */
     public function doReset(Request $request): RedirectResponse
     {
-        $request->validate([
+        $this->validate($request, [
             'token' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['min:6', 'required', 'confirmed', Rules\Password::defaults()],
@@ -169,17 +171,23 @@ class AuthController extends Controller
     public function home()
     {
         if (Auth::check()) {
-            return view('home');
+            if (Auth::user()->hasVerifiedEmail()) {
+                return view(view: 'home');
+            } else {
+                return redirect()->route('profile');
+            }
         }
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
     }
 
 
-    public function profile()
+    public function profile(Request $request)
     {
         if (Auth::check()) {
-            return view('auth.profile', ['user' => Auth::user()]);
+            $user = User::find(Auth::user()->id);
+            Auth::setUser($user);
+            return view('auth.profile', ['user' => $user]);
         }
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
@@ -241,8 +249,13 @@ class AuthController extends Controller
      */
     public function notice(Request $request)
     {
-        return $request->user()->hasVerifiedEmail()
-            ? redirect()->route('home') : view('auth.verify');
+        if (Auth::check()) {
+            return $request->user()->hasVerifiedEmail()
+                ? redirect()->route('home') : view('auth.profile');
+        }
+        Session::flash('message', 'You are not allowed to access this page!');
+        return redirect()->route('login');
+
     }
 
     /**
@@ -253,10 +266,13 @@ class AuthController extends Controller
      */
     public function verify(EmailVerificationRequest $request)
     {
-        $request->fulfill();
-        Session::flash('message', 'Your email address has been verified successfully!');
-        
-        return redirect()->route('profile');
+        if (Auth::check()) {
+            $request->fulfill();
+            Session::flash('message', 'Your email address has been verified successfully!');
+            return redirect()->route('home');
+        }
+        Session::flash('message', 'You are not allowed to access this page!');
+        return redirect()->route('login');
     }
 
     /**
@@ -265,13 +281,15 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function send(Request $request)
+    public function doSend(Request $request)
     {
-        $request->user()->sendEmailVerificationNotification();
-        Session::flash('message', 'A fresh verification link has been sent to your email address.');
-        
-        // return redirect()->route(route: 'verify');
-        return view('auth.login');
+        if (Auth::check()) {
+            $request->user()->sendEmailVerificationNotification();
+            Session::flash('message', 'A fresh verification link has been sent to your email address.');
+            return redirect()->route('profile');
+        }
+        Session::flash('message', 'You are not allowed to access this page!');
+        return redirect()->route('login');
 
     }
 }

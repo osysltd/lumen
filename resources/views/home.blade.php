@@ -38,7 +38,6 @@
                     @else
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ route('home') }}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('verification.notice') }}">Verify</a></li>
-
                     <li class="nav-item"><a class="nav-link" href="{{ route('profile') }}">Profile</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}">Logout</a></li>
                     @endguest
@@ -47,13 +46,8 @@
         </div>
     </nav>
 
-
     <div id="layout" style="display: flex; flex-direction: column; min-height: 100vh;">
         <div id="layout_content" style="min-width: 0; flex-grow: 1;">
-
-
-
-
             <!-- Call to Action-->
             @if ($message = Session::get('message'))
             <div class="container px-4 px-lg-5">
@@ -67,7 +61,6 @@
             </div>
             @endif
 
-
             <!-- Header-->
             {{-- <header class="py-2">
                 <div class="container px-lg-5">
@@ -80,8 +73,6 @@
                     </div>
                 </div>
             </header> --}}
-
-
 
             <!-- Page Content-->
             @yield('content')
@@ -142,15 +133,7 @@
                 </div>
             </div> --}}
 
-
-
-
-
-
-
-
         </div>
-
     </div>
 
     <div id="layout_footer">
@@ -167,7 +150,6 @@
                 </div>
             </div>
         </footer>
-
     </div>
 
     <!-- Bootstrap core JS-->

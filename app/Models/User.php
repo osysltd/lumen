@@ -23,7 +23,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     use Authenticatable, Authorizable, HasFactory, CanResetPassword, Notifiable;
 
     const ADMIN = 255;
-
     const API_USER = 1;
     const SHARE_USER = 2;
     const NORMAL_USER = 7;

@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\KeyGenerateCommand::class,
         Commands\ResetPasswordCommand::class,
-        Commands\InstallCommand::class
+        Commands\InstallCommand::class,
+        \Illuminate\Auth\Console\ClearResetsCommand::class,
     ];
 
     /**

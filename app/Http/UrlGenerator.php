@@ -8,11 +8,12 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\InteractsWithTime;
 use PharIo\Manifest\InvalidUrlException;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Traits\Macroable;
 
 
 class UrlGenerator extends \Laravel\Lumen\Routing\UrlGenerator
 {
-    use InteractsWithTime;
+    use InteractsWithTime, Macroable;
 
     /**
      * The encryption key resolver callable.
