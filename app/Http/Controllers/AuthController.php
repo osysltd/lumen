@@ -100,7 +100,7 @@ class AuthController extends Controller
             event(new Registered($user));
             $request->user()->sendEmailVerificationNotification();
             Session::flash('message', 'You have been registered successfully!');
-            return redirect()->route('verification.notice');
+            return redirect()->route('profile');
 
         } catch (\Illuminate\Validation\ValidationException $th) {
             Session::flash('message', json_encode($th->errors()));

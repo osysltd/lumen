@@ -62,6 +62,9 @@ $app->alias('auth.password', \Illuminate\Contracts\Auth\PasswordBrokerFactory::c
 $app->alias('auth.password.broker', \Illuminate\Auth\Passwords\PasswordBroker::class);
 $app->alias('auth.password.broker',  \Illuminate\Contracts\Auth\PasswordBroker::class);
 
+$app->alias('events',  \Illuminate\Events\Dispatcher::class);
+$app->alias('events',  \Illuminate\Contracts\Events\Dispatcher::class);
+
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -156,6 +159,8 @@ $app->register(App\Providers\BasicGuardServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
 $app->register(\Illuminate\Notifications\NotificationServiceProvider::class);
 $app->register(\Illuminate\Auth\Passwords\PasswordResetServiceProvider::class);
+$app->register(\Illuminate\Events\EventServiceProvider::class);
+
 
 /*
 |--------------------------------------------------------------------------
