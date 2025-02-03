@@ -3,11 +3,8 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Models\User;
-use App\Http\Controllers\AuthController;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -37,14 +34,12 @@ $router->group(['prefix' => 'user'], function () use ($router) {
 
     $router->post('login', ['as' => 'login.do', 'uses' => 'AuthController@doLogin']);
     $router->post('register', ['as' => 'register.do', 'uses' => 'AuthController@doRegister']);
-    $router->post('reset', ['as' => 'reset.do', 'uses' => 'AuthController@doReset']);
+    $router->post('reset', ['as' => 'reset.do', 'uses' => 'AuthController@doVerify']);
     $router->patch('profile', ['as' => 'profile.do', 'uses' => 'AuthController@doProfile']);
-
 
     $router->get('verify', ['as' => 'verification.notice', 'uses' => 'AuthController@notice']);
     $router->get('verify/{id}/{hash}', ['as' => 'verification.send', 'uses' => 'AuthController@verify']);
     $router->post('send', ['as' => 'verification.verify', 'uses' => 'AuthController@doSend']);
-
 });
 
 

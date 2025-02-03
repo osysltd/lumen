@@ -38,8 +38,6 @@ $app->withFacades(true, [
 
 $app->withEloquent();
 
-
-
 $app->alias('session', \Illuminate\Session\SessionManager::class);
 $app->alias('session.store', \Illuminate\Session\Store::class);
 $app->alias('session.store', \Illuminate\Contracts\Session\Session::class);
@@ -54,7 +52,8 @@ $app->alias('mailer', \Illuminate\Contracts\Mail\MailQueue::class);
 $app->alias('mail.manager', \Illuminate\Mail\MailManager::class);
 $app->alias('mail.manager', \Illuminate\Contracts\Mail\Factory::class);
 
-$app->alias('view', Illuminate\View\Factory::class);
+$app->alias('view', \Illuminate\View\Factory::class);
+$app->alias('view', \Illuminate\Contracts\View\Factory::class);
 
 $app->alias('auth.password', \Illuminate\Support\Facades\Password::class);
 $app->alias('auth.password', \Illuminate\Auth\Passwords\PasswordBrokerManager::class);
@@ -160,7 +159,6 @@ $app->register(\Illuminate\Mail\MailServiceProvider::class);
 $app->register(\Illuminate\Notifications\NotificationServiceProvider::class);
 $app->register(\Illuminate\Auth\Passwords\PasswordResetServiceProvider::class);
 $app->register(\Illuminate\Events\EventServiceProvider::class);
-
 
 /*
 |--------------------------------------------------------------------------

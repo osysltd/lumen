@@ -110,6 +110,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
+     * Send the verification notification.
+     *
+     * @return void
+     */
+    public function sendVerificationNotification()
+    {
+        $this->notify(new VerifyEmail);
+    }
+
+    /**
      * Get the email address that should be used for verification.
      *
      * @return string
