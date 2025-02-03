@@ -22,7 +22,6 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-
         $this->middleware('guest', [
             'only' => [
                 'login',
@@ -47,14 +46,12 @@ class AuthController extends Controller
 
         $this->middleware('signed', ['only' => 'verify']);
         $this->middleware('throttle:6,1', ['only' => ['verify', 'send', 'notice', 'doProfile']]);
-
     }
 
     public function login()
     {
         return view('auth.login');
     }
-
 
     public function doLogin(Request $request)
     {
@@ -80,12 +77,10 @@ class AuthController extends Controller
         }
     }
 
-
     public function register()
     {
         return view('auth.register');
     }
-
 
     public function doRegister(Request $request)
     {
@@ -113,12 +108,10 @@ class AuthController extends Controller
         }
     }
 
-
     public function reset()
     {
         return view('auth.reset');
     }
-
 
     /**
      * Handle an incoming new password request.
@@ -157,7 +150,6 @@ class AuthController extends Controller
                 ->withErrors(['email' => __($status)]);
     }
 
-
     public function create(array $data)
     {
         return User::create([
@@ -166,7 +158,6 @@ class AuthController extends Controller
             'password' => Hash::make($data['password'])
         ]);
     }
-
 
     public function home()
     {
@@ -177,10 +168,10 @@ class AuthController extends Controller
                 return redirect()->route('profile');
             }
         }
+
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
     }
-
 
     public function profile(Request $request)
     {
@@ -189,10 +180,10 @@ class AuthController extends Controller
             Auth::setUser($user);
             return view('auth.profile', ['user' => $user]);
         }
+
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
     }
-
 
     public function doProfile(Request $request)
     {
@@ -226,10 +217,10 @@ class AuthController extends Controller
                 return redirect()->route('profile');
             }
         }
+
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
     }
-
 
     public function logout()
     {
@@ -253,9 +244,9 @@ class AuthController extends Controller
             return $request->user()->hasVerifiedEmail()
                 ? redirect()->route('home') : view('auth.profile');
         }
+
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
-
     }
 
     /**
@@ -271,6 +262,7 @@ class AuthController extends Controller
             Session::flash('message', 'Your email address has been verified successfully!');
             return redirect()->route('home');
         }
+
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
     }
@@ -288,8 +280,8 @@ class AuthController extends Controller
             Session::flash('message', 'A fresh verification link has been sent to your email address.');
             return redirect()->route('profile');
         }
+
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
-
     }
 }
