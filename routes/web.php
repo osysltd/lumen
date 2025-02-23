@@ -24,22 +24,28 @@ $router->get('/', function () use ($router) {
 });
 
 $router->group(['prefix' => 'user'], function () use ($router) {
-    $router->get('login', ['as' => 'login', 'uses' => 'AuthController@login']);
-    $router->get('register', ['as' => 'register', 'uses' => 'AuthController@register']);
-    $router->get('reset', ['as' => 'reset', 'uses' => 'AuthController@reset']);
-    $router->get('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
-
-    $router->get('home', ['as' => 'home', 'uses' => 'AuthController@home']);
+   
     $router->get('/', ['as' => 'profile', 'uses' => 'AuthController@profile']);
+    $router->get('home', ['as' => 'home', 'uses' => 'AuthController@home']);
 
+    $router->get('login', ['as' => 'login', 'uses' => 'AuthController@login']);
     $router->post('login', ['as' => 'login.do', 'uses' => 'AuthController@doLogin']);
+
+    $router->get('register', ['as' => 'register', 'uses' => 'AuthController@register']);
     $router->post('register', ['as' => 'register.do', 'uses' => 'AuthController@doRegister']);
-    $router->post('reset', ['as' => 'reset.do', 'uses' => 'AuthController@doVerify']);
+
+    $router->get('reset', ['as' => 'reset', 'uses' => 'AuthController@reset']);
+    $router->post('reset', ['as' => 'reset.do', 'uses' => 'AuthController@sendResetLinkEmail']);
+
+    $router->get('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
     $router->patch('profile', ['as' => 'profile.do', 'uses' => 'AuthController@doProfile']);
 
     $router->get('verify', ['as' => 'verification.notice', 'uses' => 'AuthController@notice']);
     $router->get('verify/{id}/{hash}', ['as' => 'verification.send', 'uses' => 'AuthController@verify']);
     $router->post('send', ['as' => 'verification.verify', 'uses' => 'AuthController@doSend']);
+
+    $router->post('password/send', ['as' => 'password.send', 'uses' => 'AuthController@sendResetLinkEmail']);
+    $router->post('password/reset', ['as' => 'password.reset', 'uses' => 'AuthController@doReset']);
 });
 
 

@@ -22,6 +22,8 @@ class AuthController extends Controller
 {
     public function __construct()
     {
+        $this->broker = 'users';
+
         $this->middleware('guest', [
             'only' => [
                 'login',
@@ -48,33 +50,66 @@ class AuthController extends Controller
         $this->middleware('throttle:6,1', ['only' => ['verify', 'send', 'notice', 'doProfile']]);
     }
 
-    public function login()
+
+    /**
+     * Get the broker to be used during password reset.
+     *
+     * @return \Illuminate\Contracts\Auth\PasswordBroker
+     */
+    public function broker()
     {
-        return view('auth.login');
+        return Password::broker();
     }
 
-    public function doLogin(Request $request)
+    /**
+     * Get the guard to be used during password reset.
+     *
+     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     */
+    protected function guard()
     {
-        try {
-            $this->validate(
-                $request,
-                [
-                    'email' => 'required',
-                    'password' => 'required',
-                ]
-            );
+        return Auth::guard();
+    }
 
-            $credentials = $request->only('email', 'password');
-            if (Auth::attempt($credentials, (bool) $request->only('remember'))) {
-                Session::flash('message', 'You have signed in successfully!');
-                return redirect()->route('home');
-            }
+    /**
+     * Get the password reset credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function credentialsReset(Request $request)
+    {
+        return $request->only(
+            'email',
+            'password',
+            'password_confirmation',
+            'token'
+        );
+    }
 
-        } catch (\Illuminate\Validation\ValidationException $th) {
-        } finally {
-            Session::flash('message', 'Email address or password is incorrect!');
-            return redirect()->route('login');
-        }
+    /**
+     * Get the needed authentication credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function credentialsEmail(Request $request)
+    {
+        return $request->only('email');
+    }
+
+    /**
+     * Create new User Model
+     *
+     * @return\App\Models\User
+     */
+    public function create(array $data)
+    {
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password'])
+        ]);
     }
 
     public function register()
@@ -105,6 +140,35 @@ class AuthController extends Controller
         } catch (\Illuminate\Validation\ValidationException $th) {
             Session::flash('message', json_encode($th->errors()));
             return redirect()->route('register');
+        }
+    }
+
+    public function login()
+    {
+        return view('auth.login');
+    }
+
+    public function doLogin(Request $request)
+    {
+        try {
+            $this->validate(
+                $request,
+                [
+                    'email' => 'required',
+                    'password' => 'required',
+                ]
+            );
+
+            $credentials = $request->only('email', 'password');
+            if (Auth::attempt($credentials, (bool) $request->only('remember'))) {
+                Session::flash('message', 'You have signed in successfully!');
+                return redirect()->route('home');
+            }
+
+        } catch (\Illuminate\Validation\ValidationException $th) {
+        } finally {
+            Session::flash('message', 'Email address or password is incorrect!');
+            return redirect()->route('login');
         }
     }
 
@@ -150,13 +214,37 @@ class AuthController extends Controller
                 ->withErrors(['email' => __($status)]);
     }
 
-    public function create(array $data)
+    
+    /**
+     * Reset the given user's password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function doReset1(Request $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
+        $this->validate($request, [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:6'
         ]);
+
+        // Here we will attempt to reset the user's password. If it is successful we
+        // will update the password on an actual user model and persist it to the
+        // database. Otherwise we will parse the error and return the response.
+        $response = $this->broker()->reset(
+            $this->credentialsReset($request),
+            function ($user, $password) {
+                $this->resetPassword($user, $password);
+            }
+        );
+
+        // If the password was successfully reset, we will redirect the user back to
+        // the application's home authenticated view. If there is an error we can
+        // redirect them back to where they came from with their error message.
+        return $response == Password::PASSWORD_RESET
+            ? $this->sendResetResponse($request, $response)
+            : $this->sendResetFailedResponse($request, $response);
     }
 
     public function home()
@@ -221,7 +309,6 @@ class AuthController extends Controller
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
     }
-
     public function logout()
     {
         //Session::flush();
@@ -284,4 +371,96 @@ class AuthController extends Controller
         Session::flash('message', 'You are not allowed to access this page!');
         return redirect()->route('login');
     }
+
+    /**
+     * Send a reset link to the given user.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function sendResetLinkEmail(Request $request)
+    {
+        $this->validate($request, ['email' => 'required|email']);
+
+        // We will send the password reset link to this user. Once we have attempted
+        // to send the link, we will examine the response then see the message we
+        // need to show to the user. Finally, we'll send out a proper response.
+        $response = $this->broker()->sendResetLink(
+            $this->credentialsEmail($request)
+        );
+
+        return $response == Password::RESET_LINK_SENT
+            ? $this->sendResetLinkResponse($request, $response)
+            : $this->sendResetLinkFailedResponse($request, $response);
+    }
+
+    /**
+     * Get the response for a successful password reset link.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendResetLinkResponse(Request $request, $response)
+    {
+        return response(['status' => trans($response)]);
+    }
+
+    /**
+     * Get the response for a failed password reset link.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendResetLinkFailedResponse(Request $request, $response)
+    {
+        return response(['email' => trans($response)], 400);
+    }
+
+
+    /**
+     * Reset the given user's password.
+     *
+     * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
+     * @param  string  $password
+     * @return void
+     */
+    protected function resetPassword(User $user, $password)
+    {
+        $user->password = Hash::make($password);
+
+        $user->setRememberToken(Str::random(60));
+
+        $user->save();
+
+        event(new PasswordReset($user));
+
+        $this->guard()->login($user);
+    }
+
+    /**
+     * Get the response for a successful password reset.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendResetResponse(Request $request, $response)
+    {
+        return response()->json(['status' => trans($response)]);
+    }
+
+    /**
+     * Get the response for a failed password reset.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    protected function sendResetFailedResponse(Request $request, $response)
+    {
+        return response()->json(['email' => trans($response)], 400);
+    }
+
 }

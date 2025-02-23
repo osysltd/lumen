@@ -18,7 +18,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract, MustVerifyEmail
+class User extends Model implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, MustVerifyEmail
 {
     use Authenticatable, Authorizable, HasFactory, CanResetPassword, Notifiable;
 
@@ -27,6 +27,16 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     const SHARE_USER = 2;
     const NORMAL_USER = 7;
     const UNAUTHORIZED_USER = 0;
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -51,6 +61,18 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     ];
 
+    protected $guard_name = 'web';
+
+
+    /**
+     * Set Str::random(60) token
+     *
+     * @var array
+     */
+    public function setRememberToken($token)
+    {
+        $this->remember_token = $token;
+    }
 
     /**
      * Send the password reset notification.
@@ -63,16 +85,17 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         $this->notify(new PasswordReset($token));
     }
 
-    /**
-     * Set Str::random(60) token
-     *
-     * @var array
-     */
-    public function setRememberToken($token)
+    public function sendResetLink()
     {
-        $this->remember_token = $token;
+        $token = $this->createResetToken();
+        Log::info('Sent a password reset token for ' . $this->email . ' - token ' . $token);
+        $this->sendPasswordResetNotification($token);
     }
 
+    public function createResetToken()
+    {
+        return app('auth.password.broker')->createToken($this);
+    }
 
     /**
      * Determine if the user has verified their email address.
@@ -110,16 +133,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
     /**
-     * Send the verification notification.
-     *
-     * @return void
-     */
-    public function sendVerificationNotification()
-    {
-        $this->notify(new VerifyEmail);
-    }
-
-    /**
      * Get the email address that should be used for verification.
      *
      * @return string
@@ -130,14 +143,5 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     }
 
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
 
 }

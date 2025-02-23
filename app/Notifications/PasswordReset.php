@@ -49,7 +49,7 @@ class PasswordReset extends Notification
    */
     public function toMail($notifiable)
     {
-        $url = $this->sendurl . "/password/reset/{$this->token}?active=" . base64_encode($notifiable->email ?? '');
+        $url = $this->sendurl . "/user/password/reset/{$this->token}?active=" . base64_encode($notifiable->email ?? '');
 
         return Mail::to($notifiable->email)
             ->send((new PasswordResetMail($url, $notifiable)));
