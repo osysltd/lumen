@@ -41,7 +41,7 @@
                         </form>
                     </div>
                     <div class="card-footer text-center py-3">
-                        <div class="small"><a href="{{ route('login') }}">Have an account? Go to login</a></div>
+                        <div class="small"><a href="{{ route('login') }}">Have an Account? Go to Login</a></div>
                     </div>
                 </div>
             </div>
