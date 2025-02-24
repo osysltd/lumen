@@ -14,11 +14,11 @@
                         <form method="POST" action="{{ route('register.do') }}">
                             <input type="hidden" name="_token" value="{{ Session::token() }}" />
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="inputName" name="name" type="text" placeholder="Enter your name" />
+                                <input class="form-control" id="inputName" name="name" type="text" placeholder="Enter your name" required/>
                                 <label for="inputEmail">Name</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" />
+                                <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" required/>
                                 <label for="inputEmail">Email Address</label>
                             </div>
                             <div class="row mb-3">

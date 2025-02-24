@@ -13,9 +13,9 @@
                     <div class="card-body">
                         <div class="small mb-3 text-muted">Enter your email address and we will send you a link to reset your password.</div>
                         <form method="POST" action="{{ route('password.email') }}">
-                            <input type="hidden" name="_token" value="{{ Session::token() }}" />
+                            <input type="hidden" name="_token" value="{{ Session::token() }}" required/>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" />
+                                <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" required/>
                                 <label for="inputEmail">Email Address</label>
                             </div>
                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">

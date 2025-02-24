@@ -33,13 +33,13 @@
                         <div class="card-body">
                             <form method="POST" action="{{ route('profile.do') }}">
                                 @method('patch')
-                                <input type="hidden" name="_token" value="{{ Session::token() }}" />
+                                <input type="hidden" name="_token" value="{{ Session::token() }}" required/>
                                 <div class="form-floating mb-3">
-                                    <input class="form-control" id="inputName" name="name" type="text" placeholder="Enter your name" value="{{ $user->name }}" />
+                                    <input class="form-control" id="inputName" name="name" type="text" placeholder="Enter your name" value="{{ $user->name }}" required/>
                                     <label for="inputEmail">Name</label>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" value="{{ $user->email }}" />
+                                    <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" value="{{ $user->email }}" required/>
                                     <label for="inputEmail">Email Address</label>
                                 </div>
                                 <div class="row mb-3">

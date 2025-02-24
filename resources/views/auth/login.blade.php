@@ -14,11 +14,11 @@
                         <form method="POST" action="{{ route('login.do') }}">
                             <input type="hidden" name="_token" value="{{ Session::token() }}" />
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" />
+                                <input class="form-control" id="inputEmail" name="email" type="email" placeholder="name@example.com" required/>
                                 <label for="inputEmail">Email Address</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Password" />
+                                <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Password" required/>
                                 <label for="inputPassword">Password</label>
                             </div>
                             <div class="form-check mb-3">

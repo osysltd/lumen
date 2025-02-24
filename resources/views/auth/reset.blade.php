@@ -20,14 +20,14 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3 mb-md-0">
-                                        <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Create a password" />
+                                        <input class="form-control" id="inputPassword" name="password" type="password" placeholder="Create a password" required/>
                                         <label for="inputPassword">New Password</label>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-floating mb-3 mb-md-0">
-                                        <input class="form-control" id="inputPasswordConfirmation" name="password_confirmation" type="password" placeholder="Confirm password" />
+                                        <input class="form-control" id="inputPasswordConfirmation" name="password_confirmation" type="password" placeholder="Confirm password" required/>
                                         <label for="inputPasswordConfirmation">Confirm new Password</label>
                                     </div>
                                 </div>
