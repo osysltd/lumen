@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Carbon;
@@ -12,6 +13,8 @@ use App\Http\UrlGenerator;
 
 class VerifyEmail extends Notification
 {
+    use Queueable;
+
     /**
      * The callback that should be used to create the verify email URL.
      *
@@ -84,7 +87,7 @@ class VerifyEmail extends Notification
         $url = new UrlGenerator(app());
 
         return $url->temporarySignedRoute(
-            'verification.send',
+            'verification.verify',
             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
             [
                 'id' => $notifiable->getKey(),

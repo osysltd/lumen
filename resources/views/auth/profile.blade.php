@@ -10,7 +10,7 @@
                     <div class="card-header">Verify Your Email Address</div>
                     <div class="card-body">
                         <p class="card-text">Before proceeding, please check your email for a verification link. If you did not receive the email, click the button to request another.</p>
-                        <form method="POST" action="{{ route('verification.verify') }}">
+                        <form method="POST" action="{{ route('verification.resend') }}">
                             <input type="hidden" name="_token" value="{{ Session::token() }}" />
                             <div class="text-end text-center">
                                 <button class="btn btn-primary" type="submit" id="verify-button">Verify</button>

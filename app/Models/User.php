@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Notifications\PasswordReset;
+use App\Notifications\ResetPassword;
 use App\Notifications\VerifyEmail;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -82,19 +82,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new PasswordReset($token));
-    }
-
-    public function sendResetLink()
-    {
-        $token = $this->createResetToken();
-        Log::info('Sent a password reset token for ' . $this->email . ' - token ' . $token);
-        $this->sendPasswordResetNotification($token);
-    }
-
-    public function createResetToken()
-    {
-        return app('auth.password.broker')->createToken($this);
+        $this->notify(new ResetPassword($token));
     }
 
     /**
@@ -127,7 +115,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
     public function sendEmailVerificationNotification()
     {
-        // $this->notify(new \App\Notifications\ResetPassword($token));
         $this->forceFill(['email_verified_at' => null])->save();
         $this->notify(new VerifyEmail);
     }
